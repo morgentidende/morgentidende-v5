@@ -10,5 +10,11 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "routes": [
+    {
+      "pattern": "morgentidende.dk",
+      "custom_domain": true
+    }
+  ]
 }
