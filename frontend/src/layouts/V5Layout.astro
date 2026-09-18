@@ -11,6 +11,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT || '';
 ---
 <!doctype html>
 <html lang="da" data-theme="dark">
@@ -41,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentiden
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
   <script is:inline src="/v5-theme.js"></script>
+  {adsenseClient ? <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script> : null}
 </head>
 <body>
 <header class="v5-masthead">
@@ -81,10 +83,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentiden
         <a href="/redaktionelle-principper">Redaktionelle principper</a>
         <a href="/kontakt">Kontakt</a>
         <a href="/privatliv">Privatliv</a>
+        {adsenseClient ? <button class="v5-footer__privacy-settings" type="button" data-google-privacy-settings>Privatlivs- og cookievalg</button> : null}
       </nav>
     </div>
     <div class="v5-footer__legal"><p>© Alt materiale på denne side er omfattet af gældende lov om ophavsret.</p></div>
   </div>
 </footer>
+{adsenseClient ? <script is:inline>
+  window.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('[data-google-privacy-settings]')) return;
+    window.googlefc = window.googlefc || {};
+    window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+    window.googlefc.callbackQueue.push(window.googlefc.showRevocationMessage);
+  });
+</script> : null}
 </body>
 </html>
