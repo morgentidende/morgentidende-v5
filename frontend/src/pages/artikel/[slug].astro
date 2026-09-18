@@ -1,0 +1,20 @@
+---
+import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
+import V5Layout from '../../layouts/V5Layout.astro';
+import { loadArticle } from '../../lib/data';
+const article = await loadArticle(Astro.params.slug || '');
+if (!article) return Astro.redirect('/404');
+const bodyHtml = sanitizeHtml(marked.parse(article.body_markdown) as string, { allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']) });
+const summaryLabel = ['viden','liv'].includes(article.category_slug) ? 'Artiklen kort' : 'Sagen kort';
+---
+<V5Layout title={`${article.headline} – Morgentidende`} description={article.deck || article.headline} image={article.hero_url}>
+<article class="v5-shell v5-article">
+  <div class="v5-article__category">{article.category_name}</div>
+  <h1>{article.headline}</h1>
+  {article.deck ? <p class="v5-article__deck">{article.deck}</p> : null}
+  <figure><img src={article.hero_url} alt={article.hero_alt || ''}/>{article.hero_credit ? <figcaption>{article.hero_credit}</figcaption> : null}</figure>
+  <aside class="v5-summary"><h2>{summaryLabel}</h2><ul>{article.sagen_kort.map((p) => <li>{p}</li>)}</ul></aside>
+  <div class="v5-article__body" set:html={bodyHtml}></div>
+</article>
+</V5Layout>
