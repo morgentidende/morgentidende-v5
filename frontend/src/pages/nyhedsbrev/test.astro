@@ -1,0 +1,23 @@
+---
+export const prerender = false;
+---
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<title>Test nyhedsbrev – Morgentidende v5</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#0f1926;color:#f8f1e4;font-family:Arial,Helvetica,sans-serif}main{max-width:680px;margin:80px auto;padding:0 20px}.card{border:1px solid #374150;background:#182534;padding:32px}h1{margin:0 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:38px}p{color:#c8ced6;line-height:1.55}label{display:block;margin:26px 0 8px;font-weight:700}input{box-sizing:border-box;width:100%;padding:13px 14px;background:#0f1926;color:#fff;border:1px solid #5b6572}.send{margin-top:14px;padding:13px 19px;border:0;background:#e1ad45;color:#17140c;font-weight:800;cursor:pointer}.note{font-size:13px;color:#9da6b1}
+</style>
+</head><body><main><div class="card">
+<h1>Send testnyhedsbrev</h1>
+<p>Sender v5-nyhedsbrevets aktuelle design med seks af de seneste publicerede historier til den angivne adresse. Testen opretter ikke et normalt dispatch og påvirker ikke morgenudsendelsen.</p>
+<form id="f"><label for="email">Testmodtager</label><input id="email" name="email" type="email" autocomplete="email" required /><button class="send" type="submit">Send test nu</button></form>
+<p id="status" class="note"></p>
+</div></main>
+<script is:inline>
+const f=document.getElementById('f'),s=document.getElementById('status');
+f.addEventListener('submit',async e=>{e.preventDefault();s.textContent='Sender…';const email=document.getElementById('email').value.trim();try{const r=await fetch('https://wmyoplpweamkflbtvqid.supabase.co/functions/v1/v5-newsletter-test',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email})});const j=await r.json();s.textContent=r.ok?'Testmail sendt med '+j.articles+' historier.':'Fejl: '+(j.error||r.status);}catch(err){s.textContent='Kunne ikke sende testmail.';}});
+</script></body></html>
