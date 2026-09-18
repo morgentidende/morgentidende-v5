@@ -1,0 +1,54 @@
+---
+import V5Layout from '../../layouts/V5Layout.astro';
+import { V5_SUPABASE_URL } from '../../lib/supabase';
+const token=Astro.url.searchParams.get('token')||'';
+let prefs:any=null;
+if(token){
+  try {
+    const base=V5_SUPABASE_URL;
+    const response=await fetch(`${base}/functions/v1/v5-newsletter-subscribe`,{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'get_preferences',manage_token:token})
+    });
+    const data=await response.json();
+    if(response.ok && data?.ok) prefs=data.preferences;
+  } catch {}
+}
+---
+<V5Layout title="Nyhedsbrev – indstillinger">
+  <div class="v5-shell v5-prose">
+    <h1>Nyhedsbrev</h1>
+    {prefs ? <form class="v5-preferences" data-prefs data-token={token}>
+      <label><input type="checkbox" name="daily" checked={prefs.daily_news}/> Daglige nyheder</label>
+      <label><input type="checkbox" name="viden" checked={prefs.magazine_viden}/> Magasinet Viden</label>
+      <label><input type="checkbox" name="liv" checked={prefs.magazine_liv}/> Magasinet Liv</label>
+      <label>Udseende <select name="theme">
+        <option value="system" selected={prefs.preferred_theme==='system'}>System</option>
+        <option value="light" selected={prefs.preferred_theme==='light'}>Lys</option>
+        <option value="dark" selected={prefs.preferred_theme==='dark'}>Mørk</option>
+      </select></label>
+      <button type="submit">Gem indstillinger</button>
+      <button type="button" data-unsubscribe>Afmeld nyhedsbrev</button>
+      <p data-status></p>
+    </form> : <p>Indstillingslinket er ugyldigt.</p>}
+  </div>
+</V5Layout>
+<script>
+const form=document.querySelector('[data-prefs]') as HTMLFormElement|null;
+if(form){
+  const status=form.querySelector('[data-status]') as HTMLElement;
+  const token=form.dataset.token;
+  const endpoint='https://wmyoplpweamkflbtvqid.supabase.co/functions/v1/v5-newsletter-subscribe';
+  form.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    const d=new FormData(form);
+    const response=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+      action:'set_preferences',manage_token:token,daily_news:d.has('daily'),magazine_viden:d.has('viden'),magazine_liv:d.has('liv'),preferred_theme:d.get('theme')
+    })});
+    status.textContent=response.ok?'Indstillinger gemt.':'Kunne ikke gemme.';
+  });
+  form.querySelector('[data-unsubscribe]')?.addEventListener('click',async()=>{
+    const response=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'unsubscribe',manage_token:token})});
+    status.textContent=response.ok?'Du er afmeldt.':'Kunne ikke afmelde.';
+  });
+}
+</script>
