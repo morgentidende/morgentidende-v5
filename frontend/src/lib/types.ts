@@ -18,7 +18,7 @@ export type Article = {
   hero_alt: string;
   hero_credit: string | null;
   published_at: string;
-  frontpage_destination: 'lead' | 'theme' | 'special_1' | 'special_2' | 'normal';
+  frontpage_destination: 'lead' | 'theme' | 'special_1' | 'special_2' | 'normal' | 'archive';
   special_label: string | null;
   is_breaking: boolean;
   source_metadata: SourceMeta[];
