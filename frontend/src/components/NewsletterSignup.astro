@@ -1,13 +1,16 @@
 <section class="v5-newsletter" aria-labelledby="v5-newsletter-title">
-  <div>
-    <div class="v5-kicker">NYHEDSBREV</div>
-    <h2 id="v5-newsletter-title">Morgentidende direkte i indbakken</h2>
-    <p>Dagens vigtigste historier. Kort, klart og med plads til begge sider.</p>
+  <div class="v5-newsletter__copy">
+    <div class="v5-kicker">Dagligt nyhedsbrev</div>
+    <h2 id="v5-newsletter-title">Start dagen med Morgentidende</h2>
+    <p>Dagens vigtigste historier – kort og klart i din indbakke.</p>
   </div>
   <form class="v5-newsletter__form" data-newsletter-form>
-    <label class="sr-only" for="newsletter-email">E-mail</label>
-    <input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="din@email.dk" required />
-    <button type="submit">Tilmeld</button>
+    <label for="newsletter-email">Din e-mail</label>
+    <div class="v5-newsletter__row">
+      <input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="navn@eksempel.dk" required />
+      <button type="submit">Tilmeld</button>
+    </div>
+    <p class="v5-newsletter__note">Bekræft din e-mail – så er du med. Afmeld når som helst.</p>
     <p class="v5-newsletter__status" data-newsletter-status aria-live="polite"></p>
   </form>
 </section>
