@@ -1,0 +1,8 @@
+---
+import V5Layout from '../layouts/V5Layout.astro';
+import V5Card from '../components/V5Card.astro';
+import { searchArticles } from '../lib/data';
+const q = Astro.url.searchParams.get('q') || '';
+const results = q ? await searchArticles(q) : [];
+---
+<V5Layout title="Søg – Morgentidende"><div class="v5-shell v5-search"><h1>Søg</h1><form><input type="search" name="q" value={q} placeholder="Søg i Morgentidende" autofocus/><button>Søg</button></form>{q ? <p>{results.length} resultater</p> : null}<div class="v5-grid v5-grid--3">{results.map((a)=><V5Card article={a}/>)}</div></div></V5Layout>
