@@ -38,7 +38,7 @@ export async function loadArticle(slug: string) {
 }
 
 export async function loadCategory(category: string) {
-  const { data, error } = await getSupabase().from('v5_public_articles').select('*').eq('category_slug', category).order('published_at', { ascending: false }).limit(40);
+  const { data, error } = await getSupabase().from('v5_public_articles').select('*').eq('category_slug', category).neq('frontpage_destination', 'archive').order('published_at', { ascending: false }).limit(40);
   if (error) throw error;
   return (data ?? []) as Article[];
 }
