@@ -8,6 +8,7 @@ import { loadFrontpage } from '../lib/data';
 let model;
 let error = false;
 try { model = await loadFrontpage(); } catch { error = true; model = { articles:[], lead:null, normal:[], viden:[], liv:[], specials:[] }; }
+const latest = model.normal[0] ?? model.lead;
 const primary = model.normal.filter((a) => a.id !== model.lead?.id).slice(0,3);
 const secondary = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,4);
 const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !secondary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,8);
@@ -15,6 +16,8 @@ const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !
 <V5Layout image={model.lead?.hero_url}>
 <div class="v5-shell v5-frontpage">
   {error ? <div class="v5-empty">Nyhederne kan ikke hentes lige nu.</div> : null}
+
+  {!error && latest ? <aside class="v5-newsbar"><span><i></i>SENESTE NYT</span><a href={`/artikel/${latest.slug}`}>{latest.headline}</a></aside> : null}
 
   {model.lead ? <section class:list={['v5-lead', model.lead.is_breaking && 'v5-lead--breaking']}>
     <div class="v5-lead__labels"><span>{model.lead.category_name}</span>{model.lead.is_breaking ? <b>BREAKING</b> : null}</div>
