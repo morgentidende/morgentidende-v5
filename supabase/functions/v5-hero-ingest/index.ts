@@ -46,38 +46,74 @@ function safeRemoteUrl(raw:string):URL{
   return u;
 }
 
+function decodeBase64(data:string):Uint8Array{
+  const raw=atob(data);
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+  return bytes;
+}
+
 Deno.serve(async(req)=>{
   let requestId:string|undefined;
   try{
     if(req.method!=='POST') return new Response('method',{status:405});
-    const body=await req.json(); requestId=body?.request_id; const capability=String(body?.capability||'');
+    const body=await req.json();
+    requestId=body?.request_id;
+    const capability=String(body?.capability||'');
     if(!requestId||!capability) return Response.json({ok:false,error:'BAD_REQUEST'},{status:400});
+
     const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false}});
     const {data:r,error:e}=await db.from('v5_hero_ingest_requests').select('*').eq('id',requestId).eq('status','pending').maybeSingle();
     if(e||!r) return Response.json({ok:false,error:'NOT_FOUND'},{status:404});
     if(!r.capability_hash || await sha256(capability)!==r.capability_hash) return Response.json({ok:false,error:'FORBIDDEN'},{status:403});
 
-    const source=safeRemoteUrl(r.source_url);
-    const fetched=await fetch(source,{redirect:'follow',headers:{'user-agent':'Morgentidende-v5/1.0','accept':'image/*'}});
-    if(!fetched.ok) throw new Error(`FETCH_${fetched.status}`);
-    safeRemoteUrl(fetched.url);
-    const ct=(fetched.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
-    if(!['image/jpeg','image/png','image/webp','image/gif'].includes(ct)) throw new Error('NOT_IMAGE');
-    const buf=await fetched.arrayBuffer(); if(buf.byteLength===0||buf.byteLength>15_000_000) throw new Error('INVALID_SIZE');
-    const bytes=new Uint8Array(buf); const d=dims(bytes,ct); if(!d) throw new Error('DIMENSIONS_UNKNOWN');
+    let bytes:Uint8Array;
+    let ct:string;
+    const inlineData=typeof body?.data_base64==='string' ? body.data_base64 : '';
+    if(inlineData){
+      ct=String(body?.mime_type||'').toLowerCase();
+      if(!['image/jpeg','image/png','image/webp','image/gif'].includes(ct)) throw new Error('UNSUPPORTED_MIME');
+      bytes=decodeBase64(inlineData);
+    }else{
+      const source=safeRemoteUrl(r.source_url);
+      const fetched=await fetch(source,{redirect:'follow',headers:{'user-agent':'Morgentidende-v5/1.0','accept':'image/*'}});
+      if(!fetched.ok) throw new Error(`FETCH_${fetched.status}`);
+      safeRemoteUrl(fetched.url);
+      ct=(fetched.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
+      if(!['image/jpeg','image/png','image/webp','image/gif'].includes(ct)) throw new Error('NOT_IMAGE');
+      bytes=new Uint8Array(await fetched.arrayBuffer());
+    }
+
+    if(bytes.byteLength===0||bytes.byteLength>15_000_000) throw new Error('INVALID_SIZE');
+    const d=dims(bytes,ct); if(!d) throw new Error('DIMENSIONS_UNKNOWN');
     if(d[0]<800||d[1]<450) throw new Error('TOO_SMALL');
 
-    const sha=hex(await crypto.subtle.digest('SHA-256',buf)); const ext=ct==='image/jpeg'?'jpg':ct.split('/')[1];
-    const path=`${new Date().toISOString().slice(0,10)}/${sha}.${ext}`;
-    const up=await db.storage.from('v5-heroes').upload(path,buf,{contentType:ct,upsert:false});
+    const digest=hex(await crypto.subtle.digest('SHA-256',bytes));
+    const ext=ct==='image/jpeg'?'jpg':ct.split('/')[1];
+    const path=`${new Date().toISOString().slice(0,10)}/${digest}.${ext}`;
+    const up=await db.storage.from('v5-heroes').upload(path,bytes,{contentType:ct,upsert:false});
     if(up.error&&!String(up.error.message).toLowerCase().includes('exists')) throw up.error;
+
     const publicUrl=db.storage.from('v5-heroes').getPublicUrl(path).data.publicUrl;
-    const {data:asset,error:ae}=await db.from('v5_hero_assets').upsert({public_url:publicUrl,storage_path:path,source_url:r.source_url,rights_source_url:r.rights_source_url,license:r.license,credit:r.credit,mime_type:ct,width:d[0],height:d[1],sha256:sha},{onConflict:'public_url'}).select('id').single();
+    const {data:asset,error:ae}=await db.from('v5_hero_assets').upsert({
+      public_url:publicUrl,storage_path:path,source_url:r.source_url,rights_source_url:r.rights_source_url,
+      license:r.license,credit:r.credit,mime_type:ct,width:d[0],height:d[1],sha256:digest
+    },{onConflict:'public_url'}).select('id').single();
     if(ae) throw ae;
-    await db.from('v5_hero_ingest_requests').update({status:'ready',hero_asset_id:asset.id,completed_at:new Date().toISOString(),capability_hash:null}).eq('id',requestId);
+
+    await db.from('v5_hero_ingest_requests').update({
+      status:'ready',hero_asset_id:asset.id,completed_at:new Date().toISOString(),capability_hash:null
+    }).eq('id',requestId);
     return Response.json({ok:true,hero_asset_id:asset.id,public_url:publicUrl,width:d[0],height:d[1]});
   }catch(err){
-    try{ if(requestId){ const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!); await db.from('v5_hero_ingest_requests').update({status:'failed',error:String(err).slice(0,500),completed_at:new Date().toISOString(),capability_hash:null}).eq('id',requestId).eq('status','pending'); } }catch{}
+    try{
+      if(requestId){
+        const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+        await db.from('v5_hero_ingest_requests').update({
+          status:'failed',error:String(err).slice(0,500),completed_at:new Date().toISOString(),capability_hash:null
+        }).eq('id',requestId).eq('status','pending');
+      }
+    }catch{}
     return Response.json({ok:false,error:String(err)},{status:422});
   }
 });
