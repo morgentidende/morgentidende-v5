@@ -1,11 +1,18 @@
 ---
 import type { Article, SpecialSection } from '../lib/types';
 import V5Card from './V5Card.astro';
-const { section, articles, leadPackage = false } = Astro.props as { section: SpecialSection; articles: Article[]; leadPackage?: boolean };
+
+const { section, articles, leadPackage = false } = Astro.props as {
+  section: SpecialSection;
+  articles: Article[];
+  leadPackage?: boolean;
+};
+
 const destination = section.slot === 1 ? 'special_1' : 'special_2';
-const items = articles.filter((a) => a.frontpage_destination === destination).slice(0, 4);
+const items = articles.filter((a) => a.frontpage_destination === destination).slice(0, 10);
 const lead = items[0] ?? null;
 const followups = items.slice(1, 4);
+const carouselId = `v5-special-carousel-${section.slot}`;
 ---
 {items.length ? (
   leadPackage ? (
@@ -29,10 +36,51 @@ const followups = items.slice(1, 4);
       </div> : null}
     </section>
   ) : (
-    <section class="v5-section v5-special">
-      {section.kicker ? <div class="v5-kicker">{section.kicker}</div> : null}
-      <h2 class="v5-section-title">{section.title}</h2>
-      <div class="v5-grid v5-grid--4">{items.map((article) => <V5Card article={article} />)}</div>
+    <section class="v5-section v5-special-carousel-section">
+      <div class="v5-special-carousel__header">
+        <div>
+          <div class="v5-kicker">SPECIALSEKTION</div>
+          <h2 class="v5-section-title v5-special-carousel__title">
+            <span>{section.title}</span><span class="v5-special-carousel__title-arrow" aria-hidden="true">→</span>
+          </h2>
+        </div>
+        {items.length > 4 ? (
+          <button class="v5-special-carousel__next" type="button" data-carousel-next={carouselId} aria-label={`Se flere artikler i ${section.title}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 15 12l-6.5 6.5"/></svg>
+          </button>
+        ) : null}
+      </div>
+
+      <div class="v5-special-carousel__viewport" id={carouselId} data-special-carousel>
+        <div class="v5-special-carousel__track">
+          {items.map((article) => <V5Card article={article} />)}
+        </div>
+      </div>
     </section>
   )
 ) : null}
+
+<script>
+  const buttons = document.querySelectorAll('[data-carousel-next]');
+  buttons.forEach((button) => {
+    if (!(button instanceof HTMLButtonElement) || button.dataset.bound === 'true') return;
+    button.dataset.bound = 'true';
+    const id = button.dataset.carouselNext;
+    const viewport = id ? document.getElementById(id) : null;
+    if (!(viewport instanceof HTMLElement)) return;
+
+    const update = () => {
+      const atEnd = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 3;
+      button.classList.toggle('is-at-end', atEnd);
+      button.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+    };
+
+    button.addEventListener('click', () => {
+      if (button.getAttribute('aria-disabled') === 'true') return;
+      viewport.scrollBy({ left: viewport.clientWidth * 0.72, behavior: 'smooth' });
+    });
+    viewport.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+</script>
