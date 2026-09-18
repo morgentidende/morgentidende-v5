@@ -1,11 +1,14 @@
 ---
 import '../styles/v5.css';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { loadLatestHeadline } from '../lib/data';
 const { title='Morgentidende', description='Morgentidende – Danmarks nye avis', image } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
+let latest = null;
+try { latest = await loadLatestHeadline(); } catch { latest = null; }
 ---
 <!doctype html>
-<html lang="da" data-theme="light">
+<html lang="da" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -19,6 +22,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentiden
   <script is:inline src="/v5-theme.js"></script>
 </head>
 <body>
+{latest ? <aside class="v5-topbar"><div class="v5-shell v5-topbar__inner"><span><i></i>Seneste nyt</span><a href={`/artikel/${latest.slug}`}>{latest.headline}</a></div></aside> : null}
 <header class="v5-masthead">
   <div class="v5-masthead__top v5-shell">
     <a class="v5-brand" href="/" aria-label="Morgentidende forside">
@@ -32,7 +36,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentiden
     </a>
     <div class="v5-actions">
       <a class="v5-icon-button" href="/soeg" aria-label="Søg" title="Søg">⌕</a>
-      <button class="v5-theme-button" type="button" data-theme-toggle>Mørk</button>
+      <button class="v5-theme-button" type="button" data-theme-toggle>Mørk/Lys</button>
     </div>
   </div>
   <nav class="v5-nav" aria-label="Hovednavigation">
