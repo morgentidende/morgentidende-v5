@@ -1,6 +1,7 @@
 ---
 import '../styles/v5.css';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { ADSENSE_CLIENT } from '../lib/adsense';
 
 const {
   title='Morgentidende',
@@ -11,7 +12,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
-const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT || '';
+const adsenseClient = ADSENSE_CLIENT;
 ---
 <!doctype html>
 <html lang="da" data-theme="dark">
