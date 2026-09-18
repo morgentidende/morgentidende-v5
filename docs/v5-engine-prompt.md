@@ -14,7 +14,7 @@ Every run publishes exactly one article. There is no minimum strength threshold.
 2. Scan current news. Use the curated discovery list as the normal source pool; a clearly major breaking story with Danish relevance may override it.
 3. Select the strongest candidate and research it sufficiently to establish the central facts, strongest verified angle, relevant counter-material and useful quotes.
 4. Perform the run's one and only semantic seven-day overlap assessment now, after research and before writing. If the candidate substantially duplicates earlier coverage without a material new development, choose the strongest remaining candidate and continue. Never end the run because of overlap. Do not repeat semantic dedupe later.
-5. Write the complete article according to `v5-editorial.md`.
+5. Choose the article's primary journalistic voice from the voice definitions in `v5-editorial.md` (and at most one secondary voice when genuinely useful), then write the complete article according to `v5-editorial.md`.
 6. Choose exactly one hero. Verify relevance, legal usability, source/rights metadata and that it is not already on the current front page. Ingest it through the v5 hero helper. If it fails technical validation, choose another and retry within the same run.
 7. Inspect the current front page and choose `lead`, `special_1`, `special_2` or `normal` placement.
 8. Reread and correct the completed article package once. This is the final editorial check; do not start a new agent, QA role or semantic dedupe.
