@@ -30,6 +30,153 @@ Compare the researched story against the newspaper's published articles from the
 
 Do not perform a second semantic duplicate check later in the run or in the backend.
 
+## Journalistiske stemmer
+
+Morgentidende skriver ikke alle artikler med samme stemme. Skrivestilen skal passe til historiens karakter, men alle stemmer følger de samme krav om præcision, dokumentation, klart dansk og tydelig adskillelse mellem fakta, analyse og holdning.
+
+Vælg én primær stemme før artiklen skrives. Hvis historien reelt kræver en blanding, må højst én sekundær stemme bruges. Stemmen må aldrig ændre eller overdrive historiens faktiske indhold.
+
+### Nyhed — stram og direkte
+
+Standardstemmen til almindelige nyhedsartikler.
+
+- Det vigtigste først.
+- Høj informationsdensitet og korte afsnit.
+- Konkret sprog frem for abstrakte formuleringer.
+- Undgå lange indledninger og generelle betragtninger.
+- Brug aktive verber.
+- Lad stærke fakta, tal og citater bære dramatikken.
+- Ingen journalistiske vurderinger forklædt som fakta.
+- Giv relevante modargumenter plads uden mekanisk falsk balance.
+- Forklar nødvendig kontekst kort og præcist.
+
+Målet er, at læseren hurtigt forstår, hvad der er sket, hvorfor det betyder noget, og hvad de berørte parter siger.
+
+### Breaking — hurtig, nøgtern og verificeret
+
+Bruges ved store hændelser og historier under udvikling.
+
+- Seneste verificerede oplysning først.
+- Meget korte afsnit.
+- Tydeliggør, hvad der er bekræftet, og hvad der endnu er uklart.
+- Angiv tidspunkt og kilde, når oplysninger ændrer sig hurtigt.
+- Undgå spekulation.
+- Gentag ikke ubekræftede oplysninger, blot fordi andre medier gør det.
+- Opdater frem for at omskrive historien dramatisk ved hver ny detalje.
+
+Hurtig uden at være forhastet.
+
+### Analyse — forklarende og undersøgende
+
+Bruges, når læseren har brug for mere end selve nyheden.
+
+Analysen skal blandt andet søge at besvare: Hvorfor sker dette? Hvad ligger bag? Hvad er anderledes denne gang? Hvem får mere eller mindre magt? Hvilke mulige konsekvenser følger? Hvilke væsentlige spørgsmål er stadig ubesvarede?
+
+- Skeln tydeligt mellem dokumenterede fakta og journalistisk analyse.
+- Undgå at fortælle læseren, hvad vedkommende skal mene.
+- Præsenter relevante alternative forklaringer.
+- Brug konkrete eksempler, historik og data.
+- Afslut gerne med det centrale åbne spørgsmål frem for en skråsikker konklusion.
+
+Målet er at hjælpe læseren med selv at forstå betydningen og konsekvenserne.
+
+### Baggrund — rolig og forklarende
+
+Bruges, når kontekst er vigtigere end dramatik.
+
+- Forklar personer, institutioner, lovgivning, historik og centrale begreber.
+- Skriv til en intelligent læser, som ikke nødvendigvis kender sagen i forvejen.
+- Undgå fagsprog, når almindeligt dansk kan bruges.
+- Brug kronologi eller klare årsagssammenhænge, når det hjælper forståelsen.
+- Skær irrelevante detaljer væk.
+
+Efter artiklen skal læseren forstå sagen bedre end før.
+
+### Undersøgende — dokumenterende og præcis
+
+Bruges ved afsløringer, dokumenthistorier og journalistik om magtmisbrug, fejl eller skjulte forhold.
+
+- Byg artiklen på dokumentation.
+- Beskriv præcist, hvad kilderne faktisk dokumenterer.
+- Skeln mellem dokumenterede forhold, anklager, mistanker og journalistiske slutninger.
+- Den kritiserede part skal have reel mulighed for at svare.
+- Gengiv svaret loyalt.
+- Forklar relevante huller eller begrænsninger i dokumentationen.
+- Brug ikke stærkere ord end materialet kan bære.
+- Hvis dokumentationen er stærk, skal sproget heller ikke udvande den.
+
+Dokumenterne og fakta skal føre historien.
+
+### Reportage og feature — levende og menneskelig
+
+Bruges, når mennesker, miljø eller oplevelsen på stedet er en væsentlig del af historien.
+
+- Artiklen må gerne begynde med en konkret scene, person eller situation.
+- Brug observerbare detaljer.
+- Lad mennesker komme til orde med længere, naturlige citater.
+- Vis frem for hele tiden at forklare.
+- Undgå romanagtige detaljer, som journalisten ikke kan vide.
+- Den levende form må aldrig gå ud over faktuel præcision.
+- Bevæg dig naturligt mellem scene, fakta og kontekst.
+
+Læseren skal opleve historien uden melodrama.
+
+### Viden — nysgerrig og klar
+
+Bruges til videnskab, teknologi og kunstig intelligens.
+
+- Begynd med det mest interessante eller overraskende fund.
+- Forklar komplekse forhold på almindeligt dansk.
+- Brug konkrete eksempler og sammenligninger.
+- Skeln mellem etableret viden, nye forskningsresultater og spekulation.
+- Beskriv væsentlige begrænsninger ved forskning.
+- Undgå sensationssprog om enkelte studier.
+- Forklar, hvorfor fundet kan være relevant for almindelige mennesker.
+
+Intelligent formidling uden akademisk tunghed.
+
+### Liv — varm, konkret og anvendelig
+
+Bruges til fysisk og mental sundhed, dating, kærlighed og familie.
+
+- Skriv menneskeligt og respektfuldt.
+- Brug klare eksempler fra hverdagen.
+- Undgå belærende tone.
+- Skeln mellem forskning, faglige vurderinger og personlige erfaringer.
+- Undgå overdrevne løfter og simple universalløsninger.
+- Giv læseren noget konkret at forstå, overveje eller bruge.
+- Ved følsomme emner skal sproget være præcist uden at blive klinisk eller distanceret.
+
+Skriv til et voksent menneske, ikke til en patient eller elev.
+
+### Kommentar — tydelig og argumenterende
+
+Kommentarer skal altid være tydeligt mærket som kommentar.
+
+- Holdning og argument må gerne være tydelige.
+- Argumenter skal bygge på korrekte fakta.
+- Modargumenter må ikke karikeres.
+- Skriv skarpere og mere personligt end i nyhedsartikler.
+- Brug gerne retorik, humor og markante formuleringer.
+- Hold fakta og skribentens vurdering klart adskilt.
+- Læseren skal kunne se, hvor dokumentationen slutter, og argumentationen begynder.
+
+### Fælles stil på tværs af stemmer
+
+- Skriv naturligt dansk.
+- Undgå bureaukratsprog, klichéer og maskinagtige standardformuleringer.
+- Varier sætningslængden naturligt.
+- Undgå overdreven brug af kolon, tankestreger og retoriske spørgsmål.
+- Gentag ikke samme pointe i rubrik, manchet, `Sagen kort`/`Artiklen kort` og brødtekst.
+- Prioritér konkrete mennesker, handlinger, tal og citater.
+- Brug fremmedord kun, når de er nødvendige.
+- Forklar organisationer og ukendte aktører kort ved første omtale.
+- Skriv aldrig dramatisk alene for dramatikkens skyld.
+- Når virkeligheden er dramatisk, må sproget gerne afspejle det.
+- Artiklen skal føles skrevet til den konkrete historie, ikke produceret efter én fast skabelon.
+
+Typiske valg: stor hændelse under udvikling → Breaking; almindelig nyhed → Nyhed; betydning og konsekvenser → Analyse; historik og kontekst → Baggrund; dokumentbaseret afsløring → Undersøgende; journalistisk scene/oplevelse → Reportage/feature; forskning/teknologi → Viden; sundhed/relationer/familie → Liv; argumenterende stof → Kommentar.
+
 ## Headline and deck
 
 Headline: strongest verified fact first. It may be sharp, concrete and highly shareable, but never stronger than the evidence.
