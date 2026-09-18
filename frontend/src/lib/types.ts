@@ -1,3 +1,9 @@
+export type SourceMeta = {
+  name?: string;
+  url: string;
+  type?: string;
+};
+
 export type Article = {
   id: string;
   slug: string;
@@ -15,7 +21,7 @@ export type Article = {
   frontpage_destination: 'lead' | 'special_1' | 'special_2' | 'normal';
   special_label: string | null;
   is_breaking: boolean;
-  source_metadata: unknown[];
+  source_metadata: SourceMeta[];
 };
 
 export type SpecialSection = { slot: 1 | 2; title: string; kicker: string | null; active: boolean };
