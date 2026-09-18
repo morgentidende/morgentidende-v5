@@ -1,0 +1,27 @@
+---
+import type { Article } from '../lib/types';
+import V5Card from './V5Card.astro';
+const { title, articles } = Astro.props as { title: string; articles: Article[] };
+const items = articles.slice(0,4);
+const lead = items[0] ?? null;
+const followups = items.slice(1,4);
+---
+{lead ? (
+  <section class="v5-theme-package">
+    <div class="v5-theme-package__labels">
+      <span class="v5-theme-package__kind">Tema</span>
+      <span class="v5-theme-package__title">{title}</span>
+    </div>
+    <div class="v5-theme-package__lead"><V5Card article={lead} deck={true} /></div>
+    {followups.length ? <div class="v5-theme-package__followups">
+      {followups.map((article) => (
+        <article class="v5-theme-followup">
+          <a class="v5-theme-followup__image-link" href={`/artikel/${article.slug}`} aria-label={article.headline}>
+            <img class="v5-theme-followup__image" src={article.hero_url} alt={article.hero_alt || ''} loading="lazy" />
+          </a>
+          <h3 class="v5-theme-followup__headline"><a href={`/artikel/${article.slug}`}>{article.headline}</a></h3>
+        </article>
+      ))}
+    </div> : null}
+  </section>
+) : null}
