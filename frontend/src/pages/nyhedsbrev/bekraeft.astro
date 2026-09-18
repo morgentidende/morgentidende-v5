@@ -1,0 +1,25 @@
+---
+import V5Layout from '../../layouts/V5Layout.astro';
+import { V5_SUPABASE_URL } from '../../lib/supabase';
+const token=Astro.url.searchParams.get('token')||'';
+let ok=false;
+let manageToken='';
+if(token){
+  try {
+    const base=V5_SUPABASE_URL;
+    const response=await fetch(`${base}/functions/v1/v5-newsletter-subscribe`,{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'confirm',token})
+    });
+    const data=await response.json();
+    ok=response.ok && data?.ok===true;
+    manageToken=data?.manage_token||'';
+  } catch {}
+}
+---
+<V5Layout title="Bekræft nyhedsbrev – Morgentidende">
+  <div class="v5-shell v5-prose">
+    <h1>{ok?'Tilmelding bekræftet':'Linket kunne ikke bekræftes'}</h1>
+    <p>{ok?'Du modtager nu Morgentidendes nyhedsbrev.':'Prøv at tilmelde dig igen fra forsiden.'}</p>
+    {ok && manageToken ? <p><a href={`/nyhedsbrev/indstillinger?token=${manageToken}`}>Vælg dine nyhedsbrevsindstillinger</a></p> : null}
+  </div>
+</V5Layout>
