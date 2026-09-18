@@ -11,8 +11,22 @@ const summaryLabel = ['viden','liv'].includes(article.category_slug) ? 'Artiklen
 const sources = (Array.isArray(article.source_metadata) ? article.source_metadata : []) as SourceMeta[];
 const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
 const published = article.published_at ? new Intl.DateTimeFormat('da-DK',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Copenhagen'}).format(new Date(article.published_at)) : null;
+const articleUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': article.article_kind === 'magazine' ? 'Article' : 'NewsArticle',
+  headline: article.headline,
+  description: article.deck || article.headline,
+  image: article.hero_url ? [article.hero_url] : undefined,
+  datePublished: article.published_at || undefined,
+  mainEntityOfPage: articleUrl,
+  author: { '@type': 'Organization', name: 'Morgentidende', url: 'https://morgentidende.dk' },
+  publisher: { '@type': 'Organization', name: 'Morgentidende', url: 'https://morgentidende.dk' },
+  articleSection: article.category_name,
+  inLanguage: 'da-DK'
+};
 ---
-<V5Layout title={`${article.headline} – Morgentidende`} description={article.deck || article.headline} image={article.hero_url}>
+<V5Layout title={`${article.headline} – Morgentidende`} description={article.deck || article.headline} image={article.hero_url} ogType="article" jsonLd={jsonLd}>
 <article class="v5-article">
   <header class="v5-article__header">
     <div class="v5-article__category">{article.category_name}</div>
