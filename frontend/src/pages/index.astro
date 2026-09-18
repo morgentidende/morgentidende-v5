@@ -1,7 +1,6 @@
 ---
 import V5Layout from '../layouts/V5Layout.astro';
 import V5Card from '../components/V5Card.astro';
-import NewsletterSignup from '../components/NewsletterSignup.astro';
 import SpecialSection from '../components/SpecialSection.astro';
 import { loadFrontpage } from '../lib/data';
 
@@ -24,12 +23,10 @@ const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !
     <V5Card article={model.lead} deck={true} eager={true} />
   </section> : null}
 
-  {primary.length ? <section class="v5-section"><div class="v5-grid v5-grid--3">{primary.map((a) => <V5Card article={a} />)}</div></section> : null}
+  {primary.length ? <section class="v5-section"><div class:list={['v5-grid', primary.length === 1 ? 'v5-grid--1' : primary.length === 2 ? 'v5-grid--2' : 'v5-grid--3']}>{primary.map((a) => <V5Card article={a} />)}</div></section> : null}
   {secondary.length ? <><div class="v5-tier-rule"></div><section class="v5-section"><div class="v5-grid v5-grid--4">{secondary.map((a) => <V5Card article={a} />)}</div></section></> : null}
 
   {model.specials.find((s) => s.slot === 1) ? <SpecialSection section={model.specials.find((s) => s.slot === 1)} articles={model.articles} /> : null}
-  <NewsletterSignup />
-
   {model.viden.length ? <section class="v5-section v5-magazine v5-magazine--viden"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Viden</h2><div class="v5-grid v5-grid--4">{model.viden.map((a) => <V5Card article={a} />)}</div></section> : null}
   {model.specials.find((s) => s.slot === 2) ? <SpecialSection section={model.specials.find((s) => s.slot === 2)} articles={model.articles} /> : null}
   {model.liv.length ? <section class="v5-section v5-magazine v5-magazine--liv"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Liv</h2><div class="v5-grid v5-grid--4">{model.liv.map((a) => <V5Card article={a} />)}</div></section> : null}
