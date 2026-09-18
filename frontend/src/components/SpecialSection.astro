@@ -11,11 +11,22 @@ const followups = items.slice(1, 4);
   leadPackage ? (
     <section class="v5-theme-package">
       <div class="v5-theme-package__labels">
-        <span class="v5-theme-package__kind">TEMA</span>
+        <span class="v5-theme-package__kind">Tema</span>
         <span class="v5-theme-package__title">{section.title}</span>
       </div>
+
       {lead ? <div class="v5-theme-package__lead"><V5Card article={lead} deck={true} /></div> : null}
-      {followups.length ? <div class="v5-theme-package__followups">{followups.map((article) => <V5Card article={article} />)}</div> : null}
+
+      {followups.length ? <div class="v5-theme-package__followups">
+        {followups.map((article) => (
+          <article class="v5-theme-followup">
+            <a class="v5-theme-followup__image-link" href={`/artikel/${article.slug}`} aria-label={article.headline}>
+              <img class="v5-theme-followup__image" src={article.hero_url} alt={article.hero_alt || ''} loading="lazy" />
+            </a>
+            <h3 class="v5-theme-followup__headline"><a href={`/artikel/${article.slug}`}>{article.headline}</a></h3>
+          </article>
+        ))}
+      </div> : null}
     </section>
   ) : (
     <section class="v5-section v5-special">
