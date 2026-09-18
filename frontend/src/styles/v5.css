@@ -117,3 +117,32 @@ html[data-theme='dark']{
   .v5-frontpage-primary .v5-card__meta{grid-column:2;grid-row:1}
   .v5-frontpage-primary .v5-card__headline{grid-column:2;grid-row:2;font-size:clamp(20px,5.6vw,23px)}
 }
+
+
+/* Second two-card row after lead uses the same Guardian-style horizontal cards. */
+.v5-frontpage-secondary .v5-grid--2{gap:30px}
+.v5-frontpage-secondary .v5-card{
+  display:grid;
+  grid-template-columns:minmax(0,48%) minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  column-gap:20px;
+  align-items:start;
+  min-width:0;
+}
+.v5-frontpage-secondary .v5-card__image-link{grid-column:1;grid-row:1 / span 2}
+.v5-frontpage-secondary .v5-card__image{aspect-ratio:4/3}
+.v5-frontpage-secondary .v5-card__meta{grid-column:2;grid-row:1;margin:0 0 7px;font-size:11px}
+.v5-frontpage-secondary .v5-card__headline{grid-column:2;grid-row:2;margin:0;font-size:clamp(20px,1.65vw,29px);line-height:1.12}
+@media(max-width:760px){
+  .v5-frontpage-secondary .v5-grid--2{grid-template-columns:1fr;gap:0}
+  .v5-frontpage-secondary .v5-card{
+    grid-template-columns:minmax(0,40%) minmax(0,1fr);
+    grid-template-rows:auto 1fr;
+    column-gap:14px;
+    padding:13px 0;
+  }
+  .v5-frontpage-secondary .v5-card + .v5-card{border-top:1px solid var(--rule)}
+  .v5-frontpage-secondary .v5-card__image-link{grid-column:1;grid-row:1 / span 2}
+  .v5-frontpage-secondary .v5-card__meta{grid-column:2;grid-row:1}
+  .v5-frontpage-secondary .v5-card__headline{grid-column:2;grid-row:2;font-size:clamp(20px,5.6vw,23px)}
+}
