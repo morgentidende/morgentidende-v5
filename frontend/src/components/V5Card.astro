@@ -1,0 +1,12 @@
+---
+import type { Article } from '../lib/types';
+const { article, deck = false, eager = false } = Astro.props as { article: Article; deck?: boolean; eager?: boolean };
+---
+<article class="v5-card">
+  <a class="v5-card__image-link" href={`/artikel/${article.slug}`} aria-label={article.headline}>
+    <img class="v5-card__image" src={article.hero_url} alt={article.hero_alt || ''} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} />
+  </a>
+  <div class="v5-card__meta">{article.category_name}</div>
+  <h3 class="v5-card__headline"><a href={`/artikel/${article.slug}`}>{article.headline}</a></h3>
+  {deck && article.deck ? <p class="v5-card__deck">{article.deck}</p> : null}
+</article>
