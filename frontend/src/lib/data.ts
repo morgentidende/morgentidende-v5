@@ -20,6 +20,17 @@ export async function loadFrontpage() {
   };
 }
 
+export async function loadLatestHeadline() {
+  const { data, error } = await getSupabase()
+    .from('v5_public_articles')
+    .select('slug,headline')
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data as { slug: string; headline: string } | null;
+}
+
 export async function loadArticle(slug: string) {
   const { data, error } = await getSupabase().from('v5_public_articles').select('*').eq('slug', slug).maybeSingle();
   if (error) throw error;
