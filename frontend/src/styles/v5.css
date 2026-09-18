@@ -344,3 +344,39 @@ html[data-theme='dark']{
   .v5-lead__followups .v5-card__meta{grid-column:2;grid-row:1;margin:0 0 6px}
   .v5-lead__followups .v5-card__headline{grid-column:2;grid-row:2;margin:0;font-size:20px}
 }
+
+
+/* Magazine single-story state: avoid a tiny card floating in a large empty box. */
+.v5-magazine--single .v5-grid--1 .v5-card{
+  display:grid;
+  grid-template-columns:minmax(0,42%) minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  gap:0 24px;
+  align-items:start;
+}
+.v5-magazine--single .v5-card__image-link{
+  grid-column:1;
+  grid-row:1 / 3;
+}
+.v5-magazine--single .v5-card__image{
+  aspect-ratio:16/10;
+}
+.v5-magazine--single .v5-card__meta{
+  grid-column:2;
+  grid-row:1;
+  margin:0 0 8px;
+}
+.v5-magazine--single .v5-card__headline{
+  grid-column:2;
+  grid-row:2;
+  margin:0;
+  font-size:clamp(24px,1.7rem,32px);
+  line-height:1.08;
+}
+@media(max-width:640px){
+  .v5-magazine--single .v5-grid--1 .v5-card{
+    grid-template-columns:38% minmax(0,1fr);
+    gap:0 14px;
+  }
+  .v5-magazine--single .v5-card__headline{font-size:20px}
+}
