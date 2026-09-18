@@ -1,11 +1,8 @@
 ---
 import '../styles/v5.css';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
-import { loadLatestHeadline } from '../lib/data';
 const { title='Morgentidende', description='Morgentidende – Danmarks nye avis', image } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
-let latest = null;
-try { latest = await loadLatestHeadline(); } catch { latest = null; }
 ---
 <!doctype html>
 <html lang="da" data-theme="dark">
@@ -22,7 +19,6 @@ try { latest = await loadLatestHeadline(); } catch { latest = null; }
   <script is:inline src="/v5-theme.js"></script>
 </head>
 <body>
-{latest ? <aside class="v5-topbar"><div class="v5-shell v5-topbar__inner"><span><i></i>Seneste nyt</span><a href={`/artikel/${latest.slug}`}>{latest.headline}</a></div></aside> : null}
 <header class="v5-masthead">
   <div class="v5-masthead__top v5-shell">
     <a class="v5-brand" href="/" aria-label="Morgentidende forside">
@@ -47,7 +43,8 @@ try { latest = await loadLatestHeadline(); } catch { latest = null; }
 </header>
 <main><slot /></main>
 <footer class="v5-footer">
-  <div class="v5-shell"><NewsletterSignup />
+  <div class="v5-shell v5-footer__inner">
+    <NewsletterSignup />
     <div class="v5-footer__links"><a href="/om-morgentidende">Om Morgentidende</a><a href="/redaktionelle-principper">Redaktionelle principper</a><a href="/kontakt">Kontakt</a><a href="/privatliv">Privatliv</a></div>
     <p class="v5-footer__legal">© Alt materiale på denne side er omfattet af gældende lov om ophavsret.</p>
   </div>
