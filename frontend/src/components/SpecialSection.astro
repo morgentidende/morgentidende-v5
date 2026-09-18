@@ -1,12 +1,27 @@
 ---
 import type { Article, SpecialSection } from '../lib/types';
 import V5Card from './V5Card.astro';
-const { section, articles } = Astro.props as { section: SpecialSection; articles: Article[] };
+const { section, articles, leadPackage = false } = Astro.props as { section: SpecialSection; articles: Article[]; leadPackage?: boolean };
 const destination = section.slot === 1 ? 'special_1' : 'special_2';
 const items = articles.filter((a) => a.frontpage_destination === destination).slice(0, 4);
+const lead = items[0] ?? null;
+const followups = items.slice(1, 4);
 ---
-{items.length ? <section class="v5-section v5-special">
-  {section.kicker ? <div class="v5-kicker">{section.kicker}</div> : null}
-  <h2 class="v5-section-title">{section.title}</h2>
-  <div class="v5-grid v5-grid--4">{items.map((article) => <V5Card article={article} />)}</div>
-</section> : null}
+{items.length ? (
+  leadPackage ? (
+    <section class="v5-theme-package">
+      <div class="v5-theme-package__labels">
+        <span class="v5-theme-package__kind">TEMA</span>
+        <span class="v5-theme-package__title">{section.title}</span>
+      </div>
+      {lead ? <div class="v5-theme-package__lead"><V5Card article={lead} deck={true} /></div> : null}
+      {followups.length ? <div class="v5-theme-package__followups">{followups.map((article) => <V5Card article={article} />)}</div> : null}
+    </section>
+  ) : (
+    <section class="v5-section v5-special">
+      {section.kicker ? <div class="v5-kicker">{section.kicker}</div> : null}
+      <h2 class="v5-section-title">{section.title}</h2>
+      <div class="v5-grid v5-grid--4">{items.map((article) => <V5Card article={article} />)}</div>
+    </section>
+  )
+) : null}
