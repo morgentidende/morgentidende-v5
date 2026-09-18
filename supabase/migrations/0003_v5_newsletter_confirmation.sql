@@ -1,0 +1,3 @@
+-- Newsletter confirmation and preference actions are intentionally handled by the single
+-- v5-newsletter-subscribe Edge Function using opaque capability tokens.
+-- No anonymous SECURITY DEFINER RPCs are exposed.
