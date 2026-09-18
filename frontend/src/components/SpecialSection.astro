@@ -44,42 +44,69 @@ const carouselId = `v5-special-carousel-${section.slot}`;
             <span>{section.title}</span><span class="v5-special-carousel__title-arrow" aria-hidden="true">→</span>
           </h2>
         </div>
-        {items.length > 4 ? (
-          <button class="v5-special-carousel__next" type="button" data-carousel-next={carouselId} aria-label={`Se flere artikler i ${section.title}`}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 15 12l-6.5 6.5"/></svg>
-          </button>
-        ) : null}
       </div>
 
-      <div class="v5-special-carousel__viewport" id={carouselId} data-special-carousel>
-        <div class="v5-special-carousel__track">
-          {items.map((article) => <V5Card article={article} />)}
+      <div class="v5-special-carousel__frame">
+        <div class="v5-special-carousel__viewport" id={carouselId} data-special-carousel>
+          <div class="v5-special-carousel__track">
+            {items.map((article) => <V5Card article={article} />)}
+          </div>
         </div>
+
+        {items.length > 4 ? (
+          <>
+            <button class="v5-special-carousel__control v5-special-carousel__control--prev" type="button" data-carousel-prev={carouselId} aria-label={`Se forrige artikler i ${section.title}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5.5 9 12l6.5 6.5"/></svg>
+            </button>
+            <button class="v5-special-carousel__control v5-special-carousel__control--next" type="button" data-carousel-next={carouselId} aria-label={`Se flere artikler i ${section.title}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5 15 12l-6.5 6.5"/></svg>
+            </button>
+          </>
+        ) : null}
       </div>
     </section>
   )
 ) : null}
 
 <script>
-  const buttons = document.querySelectorAll('[data-carousel-next]');
-  buttons.forEach((button) => {
-    if (!(button instanceof HTMLButtonElement) || button.dataset.bound === 'true') return;
-    button.dataset.bound = 'true';
-    const id = button.dataset.carouselNext;
-    const viewport = id ? document.getElementById(id) : null;
-    if (!(viewport instanceof HTMLElement)) return;
+  document.querySelectorAll('[data-special-carousel]').forEach((node) => {
+    if (!(node instanceof HTMLElement) || node.dataset.bound === 'true') return;
+    node.dataset.bound = 'true';
 
-    const update = () => {
-      const atEnd = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 3;
-      button.classList.toggle('is-at-end', atEnd);
-      button.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+    const id = node.id;
+    const prev = document.querySelector(`[data-carousel-prev="${id}"]`);
+    const next = document.querySelector(`[data-carousel-next="${id}"]`);
+
+    const step = () => {
+      const firstCard = node.querySelector('.v5-card');
+      if (!(firstCard instanceof HTMLElement)) return node.clientWidth * .75;
+      const track = firstCard.parentElement;
+      const gap = track ? parseFloat(getComputedStyle(track).columnGap || '0') : 0;
+      return firstCard.getBoundingClientRect().width + gap;
     };
 
-    button.addEventListener('click', () => {
-      if (button.getAttribute('aria-disabled') === 'true') return;
-      viewport.scrollBy({ left: viewport.clientWidth * 0.72, behavior: 'smooth' });
-    });
-    viewport.addEventListener('scroll', update, { passive: true });
+    const update = () => {
+      const atStart = node.scrollLeft <= 2;
+      const atEnd = node.scrollLeft + node.clientWidth >= node.scrollWidth - 3;
+
+      if (prev instanceof HTMLButtonElement) {
+        prev.classList.toggle('is-hidden', atStart);
+        prev.disabled = atStart;
+      }
+      if (next instanceof HTMLButtonElement) {
+        next.classList.toggle('is-hidden', atEnd);
+        next.disabled = atEnd;
+      }
+    };
+
+    if (prev instanceof HTMLButtonElement) {
+      prev.addEventListener('click', () => node.scrollBy({ left: -step(), behavior: 'smooth' }));
+    }
+    if (next instanceof HTMLButtonElement) {
+      next.addEventListener('click', () => node.scrollBy({ left: step(), behavior: 'smooth' }));
+    }
+
+    node.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
   });
