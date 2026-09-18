@@ -1,0 +1,9 @@
+---
+import V5Layout from '../../layouts/V5Layout.astro';
+import V5Card from '../../components/V5Card.astro';
+import { loadCategory } from '../../lib/data';
+const slug = Astro.params.category || '';
+const articles = await loadCategory(slug);
+const name = articles[0]?.category_name || slug.charAt(0).toUpperCase()+slug.slice(1);
+---
+<V5Layout title={`${name} – Morgentidende`}><div class="v5-shell v5-listing"><div class="v5-kicker">SEKTION</div><h1 class="v5-section-title">{name}</h1><div class="v5-grid v5-grid--3">{articles.map((a) => <V5Card article={a} deck={false} />)}</div></div></V5Layout>
