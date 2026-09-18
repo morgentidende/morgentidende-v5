@@ -1,0 +1,38 @@
+---
+import V5Layout from '../layouts/V5Layout.astro';
+import V5Card from '../components/V5Card.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import SpecialSection from '../components/SpecialSection.astro';
+import { loadFrontpage } from '../lib/data';
+
+let model;
+let error = false;
+try { model = await loadFrontpage(); } catch { error = true; model = { articles:[], lead:null, normal:[], viden:[], liv:[], specials:[] }; }
+const latest = model.normal[0] ?? model.lead;
+const primary = model.normal.filter((a) => a.id !== model.lead?.id).slice(0,3);
+const secondary = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,4);
+const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !secondary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,8);
+---
+<V5Layout image={model.lead?.hero_url}>
+<div class="v5-shell v5-frontpage">
+  {error ? <div class="v5-empty">Nyhederne kan ikke hentes lige nu.</div> : null}
+  {!error && latest ? <aside class="v5-newsbar"><span><i></i>SENESTE NYT</span><a href={`/artikel/${latest.slug}`}>{latest.headline}</a></aside> : null}
+
+  {model.lead ? <section class:list={['v5-lead', model.lead.is_breaking && 'v5-lead--breaking']}>
+    <div class="v5-lead__labels"><span>{model.lead.category_name}</span>{model.lead.is_breaking ? <b>BREAKING</b> : null}</div>
+    <V5Card article={model.lead} deck={true} eager={true} />
+  </section> : null}
+
+  {primary.length ? <section class="v5-section"><div class="v5-grid v5-grid--3">{primary.map((a) => <V5Card article={a} />)}</div></section> : null}
+  {secondary.length ? <><div class="v5-tier-rule"></div><section class="v5-section"><div class="v5-grid v5-grid--4">{secondary.map((a) => <V5Card article={a} />)}</div></section></> : null}
+
+  {model.specials.find((s) => s.slot === 1) ? <SpecialSection section={model.specials.find((s) => s.slot === 1)} articles={model.articles} /> : null}
+  <NewsletterSignup />
+
+  <section class="v5-section v5-magazine v5-magazine--viden"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Viden</h2><div class="v5-grid v5-grid--4">{model.viden.map((a) => <V5Card article={a} />)}</div></section>
+  {model.specials.find((s) => s.slot === 2) ? <SpecialSection section={model.specials.find((s) => s.slot === 2)} articles={model.articles} /> : null}
+  <section class="v5-section v5-magazine v5-magazine--liv"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Liv</h2><div class="v5-grid v5-grid--4">{model.liv.map((a) => <V5Card article={a} />)}</div></section>
+
+  {more.length ? <section class="v5-section"><h2 class="v5-section-title">Seneste nyt</h2><div class="v5-grid v5-grid--4">{more.map((a) => <V5Card article={a} />)}</div></section> : null}
+</div>
+</V5Layout>
