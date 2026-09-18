@@ -1,0 +1,12 @@
+---
+import type { Article, SpecialSection } from '../lib/types';
+import V5Card from './V5Card.astro';
+const { section, articles } = Astro.props as { section: SpecialSection; articles: Article[] };
+const destination = section.slot === 1 ? 'special_1' : 'special_2';
+const items = articles.filter((a) => a.frontpage_destination === destination).slice(0, 4);
+---
+{items.length ? <section class="v5-section v5-special">
+  {section.kicker ? <div class="v5-kicker">{section.kicker}</div> : null}
+  <h2 class="v5-section-title">{section.title}</h2>
+  <div class="v5-grid v5-grid--4">{items.map((article) => <V5Card article={article} />)}</div>
+</section> : null}
