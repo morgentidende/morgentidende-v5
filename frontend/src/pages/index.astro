@@ -19,7 +19,7 @@ const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !
   {!error && latest ? <aside class="v5-newsbar"><span><i></i>SENESTE NYT</span><a href={`/artikel/${latest.slug}`}>{latest.headline}</a></aside> : null}
 
   {model.lead ? <section class:list={['v5-lead', model.lead.is_breaking && 'v5-lead--breaking']}>
-    <div class="v5-lead__labels"><span>{model.lead.category_name}</span>{model.lead.is_breaking ? <b>BREAKING</b> : null}</div>
+    <div class="v5-lead__labels"><span class="v5-lead__category">{model.lead.category_name}</span>{model.lead.is_breaking ? <b>BREAKING</b> : null}</div>
     <V5Card article={model.lead} deck={true} eager={true} />
   </section> : null}
 
