@@ -10,6 +10,7 @@ create table if not exists public.v5_newsletter_daily_picks (
   primary key(local_date,rank),
   unique(local_date,article_id)
 );
+create index if not exists v5_newsletter_daily_picks_article_idx on public.v5_newsletter_daily_picks(article_id);
 alter table public.v5_newsletter_daily_picks enable row level security;
 revoke all on public.v5_newsletter_daily_picks from anon, authenticated;
 
