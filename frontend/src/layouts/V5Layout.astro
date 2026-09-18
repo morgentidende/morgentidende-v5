@@ -1,7 +1,15 @@
 ---
 import '../styles/v5.css';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
-const { title='Morgentidende', description='Morgentidende – Danmarks nye avis', image } = Astro.props;
+
+const {
+  title='Morgentidende',
+  description='Morgentidende – Danmarks nye avis',
+  image,
+  ogType='website',
+  jsonLd
+} = Astro.props;
+
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
 ---
 <!doctype html>
@@ -11,10 +19,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentiden
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <meta property="og:site_name" content="Morgentidende" />
+  <meta property="og:locale" content="da_DK" />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   {image ? <meta property="og:image" content={image} /> : null}
+
   <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  {image ? <meta name="twitter:image" content={image} /> : null}
+
+  {jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script> : null}
+
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
