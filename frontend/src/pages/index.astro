@@ -8,7 +8,7 @@ let model;
 let error = false;
 try { model = await loadFrontpage(); } catch { error = true; model = { articles:[], lead:null, normal:[], viden:[], liv:[], specials:[] }; }
 const latest = model.normal[0] ?? model.lead;
-const primary = model.normal.filter((a) => a.id !== model.lead?.id).slice(0,3);
+const primary = model.normal.filter((a) => a.id !== model.lead?.id).slice(0,2);
 const secondary = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,4);
 const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !secondary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,8);
 ---
@@ -23,7 +23,7 @@ const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !
     <V5Card article={model.lead} deck={true} eager={true} />
   </section> : null}
 
-  {primary.length ? <section class="v5-section"><div class:list={['v5-grid', primary.length === 1 ? 'v5-grid--1' : primary.length === 2 ? 'v5-grid--2' : 'v5-grid--3']}>{primary.map((a) => <V5Card article={a} />)}</div></section> : null}
+  {primary.length ? <section class="v5-section v5-frontpage-primary"><div class:list={['v5-grid', primary.length === 1 ? 'v5-grid--1' : 'v5-grid--2']}>{primary.map((a) => <V5Card article={a} />)}</div></section> : null}
   {secondary.length ? <><div class="v5-tier-rule"></div><section class="v5-section"><div class="v5-grid v5-grid--4">{secondary.map((a) => <V5Card article={a} />)}</div></section></> : null}
 
   {model.specials.find((s) => s.slot === 1) ? <SpecialSection section={model.specials.find((s) => s.slot === 1)} articles={model.articles} /> : null}
