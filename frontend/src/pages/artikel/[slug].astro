@@ -10,30 +10,34 @@ const bodyHtml = sanitizeHtml(marked.parse(article.body_markdown) as string, { a
 const summaryLabel = ['viden','liv'].includes(article.category_slug) ? 'Artiklen kort' : 'Sagen kort';
 const sources = (Array.isArray(article.source_metadata) ? article.source_metadata : []) as SourceMeta[];
 const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
+const published = article.published_at ? new Intl.DateTimeFormat('da-DK',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Copenhagen'}).format(new Date(article.published_at)) : null;
 ---
 <V5Layout title={`${article.headline} – Morgentidende`} description={article.deck || article.headline} image={article.hero_url}>
 <article class="v5-article">
-  <header class="v5-article__header v5-shell">
+  <header class="v5-article__header">
     <div class="v5-article__category">{article.category_name}</div>
     <h1>{article.headline}</h1>
     {article.deck ? <p class="v5-article__deck">{article.deck}</p> : null}
+    <div class="v5-article__meta">
+      <span>Af Redaktionen</span>
+      {published ? <span>Udgivet {published}</span> : null}
+    </div>
   </header>
 
-  <figure class="v5-article__hero v5-shell">
+  <aside class="v5-summary"><h2>{summaryLabel}</h2><ul>{article.sagen_kort.map((p) => <li>{p}</li>)}</ul></aside>
+
+  <figure class="v5-article__hero">
     <img src={article.hero_url} alt={article.hero_alt || ''}/>
     {article.hero_credit ? <figcaption>{article.hero_credit}</figcaption> : null}
   </figure>
-
-  <aside class="v5-summary"><h2>{summaryLabel}</h2><ul>{article.sagen_kort.map((p) => <li>{p}</li>)}</ul></aside>
 
   <div class="v5-article__body" set:html={bodyHtml}></div>
 
   <div class="v5-article__end">
     {sources.length ? <section class="v5-article__sources"><h2>Kilder</h2><ul>{sources.map((source) => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.name || source.url}</a></li>)}</ul></section> : null}
-
     <div class="v5-article__share">
-      <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer">Facebook</a>
-      <button type="button" data-copy-link={shareUrl}>Kopier link</button>
+      <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer"><span class="v5-share-facebook" aria-hidden="true">f</span><span>Facebook</span></a>
+      <button type="button" data-copy-link={shareUrl}><span class="v5-share-link-icon" aria-hidden="true">↗</span><span data-copy-label>Kopier link</span></button>
     </div>
   </div>
 
@@ -44,11 +48,11 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidend
       const btn = el.closest('[data-copy-link]');
       if (!(btn instanceof HTMLButtonElement)) return;
       const url = btn.getAttribute('data-copy-link') || '';
+      const label = btn.querySelector('[data-copy-label]');
       try {
         await navigator.clipboard.writeText(url);
-        const original = btn.textContent;
-        btn.textContent = 'Kopieret';
-        setTimeout(() => { btn.textContent = original || 'Kopier link'; }, 1500);
+        if (label) label.textContent = 'Link kopieret';
+        setTimeout(() => { if (label) label.textContent = 'Kopier link'; }, 1800);
       } catch {}
     });
   </script>
