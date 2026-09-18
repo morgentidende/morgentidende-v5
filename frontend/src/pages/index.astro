@@ -9,9 +9,10 @@ let model;
 let error = false;
 try { model = await loadFrontpage(); } catch { error = true; model = { articles:[], lead:null, normal:[], viden:[], liv:[], specials:[] }; }
 const latest = model.normal[0] ?? model.lead;
-const primary = model.normal.filter((a) => a.id !== model.lead?.id).slice(0,2);
-const secondary = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,2);
-const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !secondary.some((p) => p.id === a.id) && a.id !== model.lead?.id).slice(0,8);
+const newsbarId = latest?.id;
+const primary = model.normal.filter((a) => a.id !== model.lead?.id && a.id !== newsbarId).slice(0,2);
+const secondary = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && a.id !== model.lead?.id && a.id !== newsbarId).slice(0,2);
+const more = model.normal.filter((a) => !primary.some((p) => p.id === a.id) && !secondary.some((p) => p.id === a.id) && a.id !== model.lead?.id && a.id !== newsbarId).slice(0,8);
 ---
 <V5Layout image={model.lead?.hero_url}>
 <div class="v5-shell v5-frontpage">
