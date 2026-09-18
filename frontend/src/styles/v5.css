@@ -510,8 +510,3 @@ html[data-theme='dark']{
 }
 
 
-/* Google CMP privacy control: visually behaves like the surrounding footer links. */
-.v5-footer__privacy-settings{
-  padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer
-}
-.v5-footer__privacy-settings:hover{color:var(--gold-soft)}
