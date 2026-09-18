@@ -45,8 +45,8 @@ const currentThemeArticles = themeArticles.filter((a) => a.special_label === cur
   <NewsletterSignup />
   {currentThemeArticles.length ? <ThemePackage title={currentThemeTitle} articles={currentThemeArticles} /> : null}
   {model.specials.find((s) => s.slot === 1) ? <SpecialSection section={model.specials.find((s) => s.slot === 1)} articles={model.articles} /> : null}
-  {model.viden.length ? <section class="v5-section v5-magazine v5-magazine--viden"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Viden</h2><div class="v5-grid v5-grid--4">{model.viden.map((a) => <V5Card article={a} />)}</div></section> : null}
-  {model.liv.length ? <section class="v5-section v5-magazine v5-magazine--liv"><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Liv</h2><div class="v5-grid v5-grid--4">{model.liv.map((a) => <V5Card article={a} />)}</div></section> : null}
+  {model.viden.length ? <section class:list={['v5-section','v5-magazine','v5-magazine--viden', model.viden.length === 1 && 'v5-magazine--single']}><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Viden</h2><div class:list={['v5-grid', model.viden.length === 1 ? 'v5-grid--1' : model.viden.length === 2 ? 'v5-grid--2' : 'v5-grid--4']}>{model.viden.map((a) => <V5Card article={a} />)}</div></section> : null}
+  {model.liv.length ? <section class:list={['v5-section','v5-magazine','v5-magazine--liv', model.liv.length === 1 && 'v5-magazine--single']}><div class="v5-kicker">MAGASIN</div><h2 class="v5-section-title">Liv</h2><div class:list={['v5-grid', model.liv.length === 1 ? 'v5-grid--1' : model.liv.length === 2 ? 'v5-grid--2' : 'v5-grid--4']}>{model.liv.map((a) => <V5Card article={a} />)}</div></section> : null}
   {model.specials.find((s) => s.slot === 2) ? <SpecialSection section={model.specials.find((s) => s.slot === 2)} articles={model.articles} /> : null}
 
   {more.length ? <section class="v5-section v5-latest-section">
