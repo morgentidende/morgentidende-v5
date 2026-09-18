@@ -3,10 +3,13 @@ import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 import V5Layout from '../../layouts/V5Layout.astro';
 import { loadArticle } from '../../lib/data';
+import type { SourceMeta } from '../../lib/types';
 const article = await loadArticle(Astro.params.slug || '');
 if (!article) return Astro.redirect('/404');
 const bodyHtml = sanitizeHtml(marked.parse(article.body_markdown) as string, { allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']) });
 const summaryLabel = ['viden','liv'].includes(article.category_slug) ? 'Artiklen kort' : 'Sagen kort';
+const sources = (Array.isArray(article.source_metadata) ? article.source_metadata : []) as SourceMeta[];
+const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://morgentidende.dk').toString();
 ---
 <V5Layout title={`${article.headline} – Morgentidende`} description={article.deck || article.headline} image={article.hero_url}>
 <article class="v5-shell v5-article">
@@ -16,5 +19,28 @@ const summaryLabel = ['viden','liv'].includes(article.category_slug) ? 'Artiklen
   <figure><img src={article.hero_url} alt={article.hero_alt || ''}/>{article.hero_credit ? <figcaption>{article.hero_credit}</figcaption> : null}</figure>
   <aside class="v5-summary"><h2>{summaryLabel}</h2><ul>{article.sagen_kort.map((p) => <li>{p}</li>)}</ul></aside>
   <div class="v5-article__body" set:html={bodyHtml}></div>
+
+  {sources.length ? <section class="v5-article__sources"><h2>Kilder</h2><ul>{sources.map((source) => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.name || source.url}</a></li>)}</ul></section> : null}
+
+  <div class="v5-article__share">
+    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer">Facebook</a>
+    <button type="button" data-copy-link={shareUrl}>Kopier link</button>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('click', async (event) => {
+      const el = event.target;
+      if (!(el instanceof HTMLElement)) return;
+      const btn = el.closest('[data-copy-link]');
+      if (!(btn instanceof HTMLButtonElement)) return;
+      const url = btn.getAttribute('data-copy-link') || '';
+      try {
+        await navigator.clipboard.writeText(url);
+        const original = btn.textContent;
+        btn.textContent = 'Kopieret';
+        setTimeout(() => { btn.textContent = original || 'Kopier link'; }, 1500);
+      } catch {}
+    });
+  </script>
 </article>
 </V5Layout>
