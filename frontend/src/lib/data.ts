@@ -13,7 +13,7 @@ export async function loadFrontpage() {
   return {
     articles: all,
     lead: all.find((a) => a.frontpage_destination === 'lead') ?? all[0] ?? null,
-    normal: all.filter((a) => a.frontpage_destination === 'normal'),
+    normal: all.filter((a) => a.frontpage_destination === 'normal' && !['viden','liv'].includes(a.category_slug)),
     viden: all.filter((a) => a.category_slug === 'viden').slice(0, 4),
     liv: all.filter((a) => a.category_slug === 'liv').slice(0, 4),
     specials: (specials ?? []) as SpecialSection[],
